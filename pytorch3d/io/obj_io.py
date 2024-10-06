@@ -148,9 +148,9 @@ def load_obj(
             map is created per face.
         texture_wrap: string, one of ["repeat", "clamp"]. This applies when computing
             the texture atlas.
-            If `texture_mode="repeat"`, for uv values outside the range [0, 1] the integer part
+            If `texture_wrap="repeat"`, for uv values outside the range [0, 1] the integer part
             is ignored and a repeating pattern is formed.
-            If `texture_mode="clamp"` the values are clamped to the range [0, 1].
+            If `texture_wrap="clamp"` the values are clamped to the range [0, 1].
             If None, then there is no transformation of the texture values.
         device: Device (as str or torch.device) on which to return the new tensors.
         path_manager: optionally a PathManager object to interpret paths.
@@ -649,8 +649,7 @@ def _load_obj(
         # Create an array of strings of material names for each face.
         # If faces_materials_idx == -1 then that face doesn't have a material.
         idx = faces_materials_idx.cpu().numpy()
-        face_material_names = np.array(material_names)[idx]  # (F,)
-        face_material_names[idx == -1] = ""
+        face_material_names = np.array([""] + material_names)[idx + 1]  # (F,)
 
         # Construct the atlas.
         texture_atlas = make_mesh_texture_atlas(
@@ -756,10 +755,13 @@ def save_obj(
     output_path = Path(f)
 
     # Save the .obj file
+    # pyre-fixme[9]: f has type `Union[Path, str]`; used as `IO[typing.Any]`.
     with _open_file(f, path_manager, "w") as f:
         if save_texture:
             # Add the header required for the texture info to be loaded correctly
             obj_header = "\nmtllib {0}.mtl\nusemtl mesh\n\n".format(output_path.stem)
+            # pyre-fixme[16]: Item `Path` of `Union[Path, str]` has no attribute
+            #  `write`.
             f.write(obj_header)
         _save(
             f,

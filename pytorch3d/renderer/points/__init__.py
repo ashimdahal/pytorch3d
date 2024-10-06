@@ -6,10 +6,14 @@
 
 # pyre-unsafe
 
-from .compositor import AlphaCompositor, NormWeightedCompositor
-from .pulsar.unified import PulsarPointsRenderer
+import torch
 
-# pyre-fixme[21]: Could not find module `pytorch3d.renderer.points.rasterize_points`.
+from .compositor import AlphaCompositor, NormWeightedCompositor
+
+# Pulsar not enabled on amd.
+if not torch.version.hip:
+    from .pulsar.unified import PulsarPointsRenderer
+
 from .rasterize_points import rasterize_points
 from .rasterizer import PointsRasterizationSettings, PointsRasterizer
 from .renderer import PointsRenderer

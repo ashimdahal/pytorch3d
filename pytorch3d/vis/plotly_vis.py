@@ -369,6 +369,7 @@ def plot_scene(
         # update camera viewpoint if provided
         if viewpoints_eye_at_up_world is not None:
             # Use camera params for batch index or the first camera if only one provided.
+            # pyre-fixme[61]: `n_viewpoint_cameras` is undefined, or not always defined.
             viewpoint_idx = min(n_viewpoint_cameras - 1, subplot_idx)
 
             eye, at, up = (i[viewpoint_idx] for i in viewpoints_eye_at_up_world)
@@ -627,7 +628,7 @@ def _add_struct_from_batch(
 
 
 def _add_mesh_trace(
-    fig: go.Figure,  # pyre-ignore[11]
+    fig: go.Figure,
     meshes: Meshes,
     trace_name: str,
     subplot_idx: int,
@@ -988,7 +989,7 @@ def _gen_fig_with_subplots(
 def _update_axes_bounds(
     verts_center: torch.Tensor,
     max_expand: float,
-    current_layout: go.Scene,  # pyre-ignore[11]
+    current_layout: go.Scene,
 ) -> None:  # pragma: no cover
     """
     Takes in the vertices' center point and max spread, and the current plotly figure

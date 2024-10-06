@@ -12,7 +12,6 @@ import numpy as np
 import torch
 from pytorch3d import _C
 
-# pyre-fixme[21]: Could not find module `pytorch3d.renderer.mesh.rasterize_meshes`.
 from pytorch3d.renderer.mesh.rasterize_meshes import pix_to_non_square_ndc
 
 from ..utils import parse_image_size
@@ -188,7 +187,6 @@ def _format_radius(
 
 class _RasterizePoints(torch.autograd.Function):
     @staticmethod
-    # pyre-fixme[14]: `forward` overrides method defined in `Function` inconsistently.
     def forward(
         ctx,
         points,  # (P, 3)
